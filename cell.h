@@ -25,6 +25,8 @@ class Tile {
 public:
     Tile(Cell &c) = default;
 
+    void Attach(const Cell &cell);
+
     virtual bool kIsMined() const = 0;
     virtual void Open() = 0;
     virtual ~Tile() = default;
@@ -51,7 +53,7 @@ private:
     int mines_around_count;
 };
 
-std::vector<std::pair<int, int>> GenerateMinesCoords(int, int);
+std::vector <std::pair<int, int>> GenerateMinesCoords(int, int);
 
 
 #endif //MINESWEEPER_CELL_H
