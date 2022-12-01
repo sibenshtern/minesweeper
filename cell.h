@@ -23,7 +23,7 @@ protected:
 
 class Tile {
 public:
-    Tile(Cell &c) = default;
+    Tile() = default;
 
     void Attach(const Cell &cell);
 
@@ -53,7 +53,7 @@ private:
     int mines_around_count;
 };
 
-std::vector <std::pair<int, int>> GenerateMinesCoords(int, int);
+std::vector<std::pair<int, int>> GenerateMinesCoords(int, int);
 
 
 #endif //MINESWEEPER_CELL_H
