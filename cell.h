@@ -8,20 +8,22 @@ using namespace Graph_lib;
 
 class Tile;
 
-class Cell : Graph_lib::Button {
+class Cell : public Graph_lib::Button {
 public:
-    Cell(Point xy, Tile &t, int size);
+    static constexpr int size = 100;
+    Cell(Point xy, Tile &t);
     void attach(Graph_lib::Window &window) override;
+    void AttachTile(Tile &tile);
 
     Point Center() const { return Point{loc.x + width / 2, loc.y + height / 2}; }
     const int kSize;
 protected:
-    const Tile *kTile{nullptr};
+    Tile *kTile{nullptr};
 };
 
 class Tile {
 public:
-    Tile(Cell &c) : kCell{&c} {}
+    Tile(Cell &c) = default;
 
     virtual bool kIsMined() const = 0;
     virtual void Open() = 0;
@@ -31,16 +33,16 @@ protected:
     bool is_opened{false};
 };
 
-class MinedTile : Tile {
+class MinedTile : public Tile {
 public:
-    MinedTile(Cell &cell);
+    MinedTile() = default;
     void Open() override;
     bool kIsMined() const override { return true; }
 };
 
-class EmptyTile : Tile {
+class EmptyTile : public Tile {
 public:
-    EmptyTile(Cell &cell, int mines_around);
+    EmptyTile(int mines_around);
 
     void Open() override;
     bool kIsMined() const override { return false; }
@@ -48,6 +50,8 @@ public:
 private:
     int mines_around_count;
 };
+
+std::vector<std::pair<int, int>> GenerateMinesCoords(int, int);
 
 
 #endif //MINESWEEPER_CELL_H

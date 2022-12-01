@@ -4,10 +4,11 @@
 #include "Graph_lib/Simple_window.h"
 #include "cell.h"
 
-class Board : Graph_lib::Widget {
+class Board : public Graph_lib::Widget {
 public:
-    const int margin = 30;
-    const int size = 100; // TODO: calculate size of board (find formula)
+    static constexpr int margin = 30;
+    static constexpr int size = 1060; // TODO: calculate size of board (find formula)
+    static constexpr int N = 20;
 
     Board (Point xy);
 
@@ -19,6 +20,8 @@ public:
 private:
     Graph_lib::Vector_ref<Cell> cells;
 };
+
+std::vector<std::vector<char>> *GenerateBoard(int, int);
 
 
 #endif //MINESWEEPER_BOARD_H
