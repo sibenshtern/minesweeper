@@ -3,7 +3,6 @@
 #include <Graph_lib/Graph.h>
 #include <Graph_lib/Simple_window.h>
 
-#include "board.h"
 #include "minesweeper.h"
 
 using namespace Graph_lib;

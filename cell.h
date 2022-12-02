@@ -26,6 +26,7 @@ public:
     Tile() = default;
 
     void Attach(const Cell &cell);
+    void ChangeState() { is_marked = !is_marked; }
 
     virtual bool kIsMined() const = 0;
     virtual void Open() = 0;
@@ -33,6 +34,7 @@ public:
 protected:
     const Cell *kCell = nullptr;
     bool is_opened{false};
+    bool is_marked{false};
 };
 
 class MinedTile : public Tile {
