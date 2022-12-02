@@ -10,7 +10,19 @@
 #include "board.h"
 
 Board::Board(Graph_lib::Point xy) : Graph_lib::Widget{xy, size, size, "Minesweeper", nullptr} {
-    // TODO: write constructor
+    std::vector<Tile> tiles;
+
+    auto board = GenerateBoard(10, N);
+
+    for (int i = 0; i < N; ++i)
+        for (int j = 0; j < N; ++j) {
+            Tile *tile;
+            if ((*board)[i][j] == 'm')
+                tile = new MinedTile();
+            else
+                tile = new EmptyTile{(*board)[i][j]};
+            cells.push_back(new Cell{Point{margin + j * Cell::size, margin + (N - 1 - i) * Cell::size}, (Tile &)tile});
+        }
 }
 
 void Board::show() {
