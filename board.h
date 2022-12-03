@@ -16,6 +16,9 @@ public:
     void hide() override;
     void move(int dx, int dy) override;
 
+    void OpenCell(Cell &cell);
+    void Mark(Cell &cell);
+
     void attach(Graph_lib::Window &window) override;
 private:
     Graph_lib::Vector_ref<Cell> cells;
