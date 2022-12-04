@@ -76,11 +76,11 @@ void Board::OpenCell(Cell &cell)
     if (!cell.kTile) throw std::runtime_error("Cell doesn't exist");
     if (cell.kTile->IsOpened()) return;
 
-    cell.kTile->ChangeState();
+    cell.kTile->Open();
 
     if (cell.kTile->kIsMined()) 
     {
-        //GameOver();
+        GameOver();
         return;
     }
     int n = &cell - &cells[0];
@@ -93,4 +93,11 @@ void Board::OpenCell(Cell &cell)
                 (i != 0 || j != 0))
                 if (dynamic_cast<EmptyTile &>(*cell.kTile).kIsMinesAround() == 0) 
                     OpenCell(cells[(x + i) + N * (y + j)]);
+}
+
+
+void Board::Mark(Cell &cell)
+{
+    if (!cell.kTile) throw std::runtime_error("cell doesn't on board");
+    cell.kTile->ChangeState();
 }

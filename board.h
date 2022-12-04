@@ -25,6 +25,6 @@ private:
 };
 
 std::vector<std::vector<char>> *GenerateBoard(int, int);
-
+void GameOver() {}
 
 #endif //MINESWEEPER_BOARD_H
