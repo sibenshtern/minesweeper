@@ -9,7 +9,8 @@
 #include "cell.h"
 #include "board.h"
 
-Board::Board(Graph_lib::Point xy) : Graph_lib::Widget{xy, size, size, "Minesweeper", nullptr} {
+Board::Board(Graph_lib::Point xy, Graph_lib::Callback callback)
+        : Graph_lib::Widget{xy, size, size, "Minesweeper", nullptr} {
     std::vector<Tile> tiles;
 
     auto board = GenerateBoard(10, N);
@@ -21,7 +22,7 @@ Board::Board(Graph_lib::Point xy) : Graph_lib::Widget{xy, size, size, "Minesweep
                 tile = new MinedTile();
             else
                 tile = new EmptyTile{(*board)[i][j]};
-            cells.push_back(new Cell{Point{margin + j * Cell::size, margin + (N - 1 - i) * Cell::size}, (Tile &)tile});
+            cells.push_back(new Cell{Point{margin + j * Cell::size, margin + (N - 1 - i) * Cell::size}, *tile, callback});
         }
 }
 

@@ -10,8 +10,8 @@ using engine = std::mt19937;
 
 using namespace Graph_lib;
 
-Cell::Cell(Point xy, Tile &tile)
-        : Button{xy, size, size, "", nullptr}, kSize{size}, kTile{&tile} {
+Cell::Cell(Point xy, Tile &tile, Callback callback)
+        : Button{xy, size, size, "", callback}, kSize{size}, kTile{&tile} {
 }
 
 void Cell::attach(Window &window) {

@@ -11,13 +11,12 @@ class Tile;
 class Cell : public Graph_lib::Button {
 public:
     static constexpr int size = 100;
-    Cell(Point xy, Tile &t);
+    Cell(Point xy, Tile &t, Callback callback);
     void attach(Graph_lib::Window &window) override;
     void AttachTile(Tile &tile);
 
     Point Center() const { return Point{loc.x + width / 2, loc.y + height / 2}; }
     const int kSize;
-protected:
     Tile *kTile{nullptr};
 };
 

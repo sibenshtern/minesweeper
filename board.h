@@ -10,14 +10,14 @@ public:
     static constexpr int size = 1060; // TODO: calculate size of board (find formula)
     static constexpr int N = 20;
 
-    Board (Point xy);
+    Board (Point xy, Graph_lib::Callback callback);
 
     void show() override;
     void hide() override;
     void move(int dx, int dy) override;
 
-    void OpenCell(Cell &cell);
-    void Mark(Cell &cell);
+    void OpenCell(Cell &cell) {};
+    void Mark(Cell &cell) {};
 
     void attach(Graph_lib::Window &window) override;
 private:
