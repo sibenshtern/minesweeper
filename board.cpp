@@ -70,3 +70,28 @@ std::vector<std::vector<char>> *GenerateBoard(int mines_num, int board_size) {
 
     return head;
 }
+
+
+void Board::OpenCell(Cell &cell)
+{
+    if (!cell.kTile) throw std::runtime_error("Cell doesn't exist");
+    if (cell.kTile->IsOpened()) return;
+
+    cell.kTile->ChangeState();
+
+    if (cell.kTile->kIsMined()) 
+    {
+        //GameOver();
+        return;
+    }
+    int n = &cell - &cells[0];
+    int x = n % N;
+    int y = n / N;
+    for (int i = -1; i < 2; i++) 
+        for (int j = -1; j < 2; j++)
+            if ((x + i > -1 && x + i < N) &&
+                (y + j > -1 && y + j < N) &&
+                (i != 0 || j != 0))
+                if (dynamic_cast<EmptyTile &>(*cell.kTile).kIsMinesAround() == 0) 
+                    OpenCell(cells[(x + i) + N * (y + j)]);
+}
