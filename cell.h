@@ -17,7 +17,6 @@ public:
 
     Point Center() const { return Point{loc.x + width / 2, loc.y + height / 2}; }
     const int kSize;
-protected:
     Tile *kTile{nullptr};
 };
 
@@ -27,6 +26,8 @@ public:
 
     void Attach(const Cell &cell);
     void ChangeState() { is_marked = !is_marked; }
+    
+    bool IsOpened() { return is_opened; }
 
     virtual bool kIsMined() const = 0;
     virtual void Open() = 0;
