@@ -8,7 +8,7 @@ class Board : public Graph_lib::Widget {
 public:
     static constexpr int margin = 30;
     static constexpr int size = 1060; // TODO: calculate size of board (find formula)
-    static constexpr int N = 20;
+    static constexpr int N = 10;
 
     Board (Point xy, Graph_lib::Callback callback);
 
@@ -16,8 +16,11 @@ public:
     void hide() override;
     void move(int dx, int dy) override;
 
-    void OpenCell(Cell &cell) {};
-    void Mark(Cell &cell) {};
+    void OpenCell(Cell &cell);
+    void Mark(Cell &cell);
+    int Where(Cell &cell);
+
+    void GameOver() {};
 
     void attach(Graph_lib::Window &window) override;
 private:
@@ -25,6 +28,5 @@ private:
 };
 
 std::vector<std::vector<char>> *GenerateBoard(int, int);
-void GameOver() {}
 
 #endif //MINESWEEPER_BOARD_H

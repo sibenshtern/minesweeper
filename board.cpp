@@ -13,7 +13,7 @@ Board::Board(Graph_lib::Point xy, Graph_lib::Callback callback)
         : Graph_lib::Widget{xy, size, size, "Minesweeper", nullptr} {
     std::vector<Tile> tiles;
 
-    auto board = GenerateBoard(10, N);
+    auto board = GenerateBoard(50, N);
 
     for (int i = 0; i < N; ++i)
         for (int j = 0; j < N; ++j) {
@@ -21,7 +21,7 @@ Board::Board(Graph_lib::Point xy, Graph_lib::Callback callback)
             if ((*board)[i][j] == 'm')
                 tile = new MinedTile();
             else
-                tile = new EmptyTile{(*board)[i][j]};
+                tile = new EmptyTile{(*board)[i][j] - '0'};
             cells.push_back(new Cell{Point{margin + j * Cell::size, margin + (N - 1 - i) * Cell::size}, *tile, callback});
         }
 }
@@ -71,20 +71,35 @@ std::vector<std::vector<char>> *GenerateBoard(int mines_num, int board_size) {
     return head;
 }
 
+int Board::Where(Cell &cell) {
+    int k = 0;
+    for (; k < cells.size(); ++k) {
+        if (&cells[k] == &cell) {
+            break;
+        }
+    }
+
+    if (k == cells.size())
+        throw std::runtime_error("Board::Where(): cell not found!");
+
+    return k;
+}
 
 void Board::OpenCell(Cell &cell) {
     if (!cell.kTile) 
         throw std::runtime_error("Cell doesn't exist");
     if (cell.kTile->IsOpened()) 
         return;
-
     cell.kTile->Open();
 
     if (cell.kTile->kIsMined()) {
         GameOver();
         return;
     }
-    int n = &cell - &cells[0];
+    int n = Where(cell);
+    std::cout << "position " << n << "\n";
+    cell.Open(17);
+
     int x = n % N;
     int y = n / N;
     for (int i = -1; i < 2; i++) 
@@ -92,10 +107,9 @@ void Board::OpenCell(Cell &cell) {
             if ((x + i > -1 && x + i < N) &&
                 (y + j > -1 && y + j < N) &&
                 (i != 0 || j != 0))
-                if (dynamic_cast<EmptyTile &>(*cell.kTile).kIsMinesAround() == 0) 
+                if (!dynamic_cast<EmptyTile &>(*cell.kTile).kIsMinesAround())
                     OpenCell(cells[(x + i) + N * (y + j)]);
 }
-
 
 void Board::Mark(Cell &cell) {
     if (!cell.kTile) 
