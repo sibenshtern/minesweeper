@@ -11,7 +11,7 @@ using engine = std::mt19937;
 using namespace Graph_lib;
 
 Cell::Cell(Point xy, Tile &tile, Callback callback)
-        : Button{xy, size, size, "", callback}, kSize{size}, kTile{&tile} {
+        : Button{xy, size, size, "", callback}, kTile{&tile} {
 }
 
 void Cell::attach(Window &window) {
@@ -24,7 +24,7 @@ void Cell::AttachTile(Tile &tile) {
     kTile = &tile;
 }
 
-void Tile::Attach(const Cell &cell) {
+void Tile::Attach(Cell &cell) {
     if (kCell)
         throw std::runtime_error("Tile::Attach(): Tile already add to Cell");
     kCell = &cell;
@@ -34,8 +34,7 @@ void MinedTile::Open() {
     // TODO: draw mine picture (prefer SVG) and end the game (need to be checked in Minesweepers)
 }
 
-EmptyTile::EmptyTile(int mines_around)
-        : mines_around_count{mines_around} {};
+EmptyTile::EmptyTile(int mines_around) : mines_around_count{mines_around} {};
 
 void EmptyTile::Open() {
     is_opened = true;
@@ -57,7 +56,7 @@ std::vector<std::pair<int, int>> GenerateMinesCoords(int mines_num, int board_si
     std::vector<std::pair<int, int>> coords_xy;
 
     for (int xy: coords)
-        coords_xy.push_back(std::pair(xy / board_size, xy % board_size));
+        coords_xy.emplace_back(std::pair(xy / board_size, xy % board_size));
 
     return coords_xy;
 }
