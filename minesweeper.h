@@ -9,6 +9,9 @@ using Graph_lib::Address;
 
 class Minesweeper : public Graph_lib::Window {
 public:
+    static constexpr int kLeftMouse = 1;
+    static constexpr int kRightMouse = 3;
+
     Minesweeper(Point xy);
 private:
     Board board;

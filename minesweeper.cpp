@@ -17,8 +17,8 @@ void Minesweeper::Clicked(Cell &cell) {
     int button = Fl::event_button();
     std::clog << button << "\n";
 
-    if (button == 1)
+    if (button == kLeftMouse)
         board.OpenCell(cell);
-    else if (button == 3)
+    else if (button == kRightMouse)
         board.Mark(cell);
 }
