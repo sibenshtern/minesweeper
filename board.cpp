@@ -71,15 +71,15 @@ std::vector<std::vector<char>> *GenerateBoard(int mines_num, int board_size) {
 }
 
 
-void Board::OpenCell(Cell &cell)
-{
-    if (!cell.kTile) throw std::runtime_error("Cell doesn't exist");
-    if (cell.kTile->IsOpened()) return;
+void Board::OpenCell(Cell &cell) {
+    if (!cell.kTile) 
+        throw std::runtime_error("Cell doesn't exist");
+    if (cell.kTile->IsOpened()) 
+        return;
 
     cell.kTile->Open();
 
-    if (cell.kTile->kIsMined()) 
-    {
+    if (cell.kTile->kIsMined()) {
         GameOver();
         return;
     }
@@ -96,8 +96,8 @@ void Board::OpenCell(Cell &cell)
 }
 
 
-void Board::Mark(Cell &cell)
-{
-    if (!cell.kTile) throw std::runtime_error("cell doesn't on board");
+void Board::Mark(Cell &cell) {
+    if (!cell.kTile) 
+        throw std::runtime_error("cell doesn't on board");
     cell.kTile->ChangeState();
 }
