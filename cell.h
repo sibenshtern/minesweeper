@@ -14,6 +14,7 @@ public:
     Cell(Point xy, Tile &t, Callback callback);
     void attach(Graph_lib::Window &window) override;
     void AttachTile(Tile &tile);
+    void Open(int color);
 
     Point Center() const { return Point{loc.x + width / 2, loc.y + height / 2}; }
     const int kSize;
@@ -51,8 +52,7 @@ public:
 
     void Open() override;
     bool kIsMined() const override { return false; }
-    bool kIsMinesAround() const { return mines_around_count == 0; }
-private:
+    bool kIsMinesAround() const { return mines_around_count != 0; }
     int mines_around_count;
 };
 
