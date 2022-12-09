@@ -13,7 +13,7 @@ Board::Board(Graph_lib::Point xy, Graph_lib::Callback callback)
         : Graph_lib::Widget{xy, size, size, "Minesweeper", nullptr} {
     std::vector<Tile> tiles;
 
-    auto board = GenerateBoard(10, N);
+    auto board = GenerateBoard(7, N);
 
     for (int i = 0; i < N; ++i)
         for (int j = 0; j < N; ++j) {

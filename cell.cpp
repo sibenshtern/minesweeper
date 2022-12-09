@@ -15,14 +15,15 @@ int kColors[9] = {17, 119, 127, 135, 134, 133, 132, 131, 130};
 Cell::Cell(Point xy, Tile &tile, Callback callback)
         : Button{xy, size, size, "", callback}, kTile{&tile} {
             try {
-        label = std::to_string(dynamic_cast<EmptyTile &>(tile).MinesCount());
+        tile.Attach(*this);
+//        label = std::to_string(dynamic_cast<EmptyTile &>(tile).MinesCount());
     }
     catch (std::exception &e) {
         std::cerr << e.what() << "\n";
     }
 }
 
-void Cell::attach(Window &window) {
+void Cell::attach(Graph_lib::Window &window) {
     Button::attach(window);
 }
 
@@ -40,11 +41,20 @@ void Tile::Attach(Cell &cell) {
 
 void Cell::Open(int color) {
     pw->color(Fl_Color(kColors[dynamic_cast<EmptyTile &>(*kTile).MinesCount()]));
+    label = std::to_string(dynamic_cast<EmptyTile &>(*kTile).MinesCount());
     Fl::redraw();
 }
 
+
+void Cell::AttachImage(Image& image){
+    own->attach(image);
+}
+
 void MinedTile::Open() {
-    // TODO: draw mine picture (prefer SVG) and end the game (need to be checked in Minesweepers)
+    auto center = kCell->Center();
+    auto *mine = new Image{Point{center.x - 48, center.y - 48}, "bomb-icon.png", Suffix::png};
+    kCell->AttachImage(*mine);
+
 }
 
 EmptyTile::EmptyTile(int mines_around) : mines_around_count{mines_around} {};
