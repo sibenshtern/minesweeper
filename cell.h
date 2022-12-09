@@ -19,6 +19,7 @@ public:
     Point Center() const { return Point{loc.x + width / 2, loc.y + height / 2}; }
     const int kSize;
     Tile *kTile{nullptr};
+    void deactivate() { pw->deactivate(); }
 };
 
 class Tile {

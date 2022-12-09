@@ -20,7 +20,7 @@ public:
     void Mark(Cell &cell);
     int Where(Cell &cell);
 
-    void GameOver() {};
+    void GameOver();
 
     void attach(Graph_lib::Window &window) override;
 private:

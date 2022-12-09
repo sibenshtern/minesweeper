@@ -50,6 +50,7 @@ void Board::attach(Graph_lib::Window &window) {
 
 std::vector<std::vector<char>> *GenerateBoard(int mines_num, int board_size) {
     auto *head = new std::vector<std::vector<char>>(board_size, std::vector<char>(board_size, '0'));
+    if (mines_num >= board_size * board_size) throw std::runtime_error("too much mines");
     std::vector<std::pair<int, int>> mines_coords;
 
     auto mines = GenerateMinesCoords(mines_num, board_size);
@@ -92,12 +93,10 @@ void Board::OpenCell(Cell &cell) {
         return;
 
     cell.kTile->Open();
-
     if (cell.kTile->kIsMined()) {
         GameOver();
         return;
     }
-
     int n = Where(cell);
         std::cout << "position " << n << "\n";
         cell.Open(17);
@@ -123,4 +122,15 @@ void Board::Mark(Cell &cell) {
     if (!cell.kTile) 
         throw std::runtime_error("cell doesn't on board");
     cell.kTile->ChangeState();
+}
+
+void Board::GameOver()
+{
+    Simple_window win{Point {(margin + size) / 2, (margin + size) / 2}, 1000, 1000, "end"};
+    Graph_lib::Text goodbuy{Point{190, 200}, "Game over"};
+    goodbuy.set_font_size(50);
+    for (int i = 0; i < cells.size(); ++i)
+        cells[i].deactivate();
+    win.attach(goodbuy); 
+    win.wait_for_button();
 }
