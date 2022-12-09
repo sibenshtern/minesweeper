@@ -11,6 +11,7 @@ find_package(FLTK REQUIRED)
 find_package(OpenGL REQUIRED)
 
 set(GRAPHLIB_DIR ".")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
 include_directories(
         ${GRAPHLIB_DIR}
@@ -31,14 +32,10 @@ target_link_libraries(
         minesweeper
         ${FLTK_LIBRARIES}
         ${OPENGL_LIBRARIES}
-        jpeg
-        png
-        Xinerama
-        Xfixes
-        Xcursor
-        Xft
-        Xrender
-        fontconfig
+        dl
+        fltk_jpeg
+        fltk_png
+        fltk_z
 )
 
 install(TARGETS minesweeper)

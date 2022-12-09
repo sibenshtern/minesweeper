@@ -14,9 +14,11 @@ public:
     Cell(Point xy, Tile &t, Callback callback);
     void attach(Graph_lib::Window &window) override;
     void AttachTile(Tile &tile);
+    void Open(int color);
 
     Point Center() const { return Point{loc.x + width / 2, loc.y + height / 2}; }
     Tile *kTile{nullptr}; // pointer to logic tile
+    void deactivate() { pw->deactivate(); }
 };
 
 class Tile {
