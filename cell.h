@@ -16,6 +16,8 @@ public:
     void AttachTile(Tile &tile);
     void Open(int color);
     void AttachImage(Image&);
+    void DetatchImage(Image&);
+    Image* img = nullptr;
 
     Point Center() const { return Point{loc.x + width / 2, loc.y + height / 2}; }
     Tile *kTile{nullptr}; // pointer to logic tile
@@ -30,7 +32,7 @@ public:
     void ChangeState() { is_marked = !is_marked; }
     
     bool IsOpened() { return is_opened; }
-
+    bool IsMarked() { return is_marked; }
     // Shows if cell is mined
     // Return true if yes, false if no
     virtual bool IsMined() const = 0;

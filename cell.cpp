@@ -50,6 +50,9 @@ void Cell::AttachImage(Image& image){
     own->attach(image);
 }
 
+void Cell::DetatchImage(Image& image){
+    own->detach(image);
+}
 void MinedTile::Open() {
     auto center = kCell->Center();
     auto *mine = new Image{Point{center.x - 48, center.y - 48}, "bomb-icon.png", Suffix::png};

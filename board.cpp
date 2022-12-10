@@ -121,8 +121,15 @@ void Board::Mark(Cell &cell) {
     if (!cell.kTile) 
         throw std::runtime_error("cell doesn't on board");
     cell.kTile->ChangeState();
+    auto center = cell.Center();
+    if (!cell.kTile->IsMarked())
+        cell.DetatchImage(*cell.img);
+    else
+    {
+        cell.img = new Image{Point{center.x - 48, center.y - 48}, "flag.png", Suffix::png};
+        cell.AttachImage(*cell.img);
 }
-
+}
 void Board::GameOver()
 {
     Simple_window win{Point {(margin + size) / 2, (margin + size) / 2}, 1000, 1000, "end"};

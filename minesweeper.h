@@ -21,7 +21,7 @@ private:
         dynamic_cast<Minesweeper &>(btn.window()).Clicked(btn);
     }
 
-     void Clicked(Cell &c);
+    void Clicked(Cell &c);
 };
 
 
