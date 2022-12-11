@@ -89,6 +89,10 @@ int Board::Where(Cell &cell) {
 void Board::OpenCell(Cell &cell) {
     if (!cell.kTile) 
         throw std::runtime_error("Cell doesn't exist");
+    if (cell.kTile -> IsMarked())
+         cell.DetatchImage(*cell.img);
+
+
     if (cell.kTile->IsOpened()) 
         return;
 
