@@ -13,7 +13,11 @@ Board::Board(Graph_lib::Point xy, Graph_lib::Callback callback)
         : Graph_lib::Widget{xy, size, size, "Minesweeper", nullptr} {
     std::vector<Tile> tiles;
 
+<<<<<<< HEAD
     auto board = GenerateBoard(10, N);
+=======
+    auto board = GenerateBoard(5, N);
+>>>>>>> 8f406c9... class GameOver
 
     for (int i = 0; i < N; ++i)
         for (int j = 0; j < N; ++j) {
@@ -24,6 +28,7 @@ Board::Board(Graph_lib::Point xy, Graph_lib::Callback callback)
                 tile = new EmptyTile{(*board)[i][j] - '0'};
             cells.push_back(new Cell{Point{margin + j * Cell::size, margin + (N - 1 - i) * Cell::size}, *tile, callback});
         }
+    delete board;
 }
 
 void Board::show() {
@@ -93,8 +98,13 @@ void Board::OpenCell(Cell &cell) {
         return;
 
     cell.kTile->Open();
+<<<<<<< HEAD
     if (cell.kTile->kIsMined()) {
         GameOver();
+=======
+    if (cell.kTile->IsMined()) {
+        End();
+>>>>>>> 8f406c9... class GameOver
         return;
     }
     int n = Where(cell);
@@ -122,15 +132,30 @@ void Board::Mark(Cell &cell) {
     if (!cell.kTile) 
         throw std::runtime_error("cell doesn't on board");
     cell.kTile->ChangeState();
+<<<<<<< HEAD
 }
 
 void Board::GameOver()
+=======
+    auto center = cell.Center();
+    if (!cell.kTile->IsMarked())
+        cell.DetatchImage(*cell.img);
+    else
+    {
+        cell.img = new Image{Point{center.x - 48, center.y - 48}, "flag.png", Suffix::png};
+        cell.AttachImage(*cell.img);
+    }
+}
+
+void Board::End()
+>>>>>>> 8f406c9... class GameOver
 {
-    Simple_window win{Point {(margin + size) / 2, (margin + size) / 2}, 1000, 1000, "end"};
-    Graph_lib::Text goodbuy{Point{190, 200}, "Game over"};
-    goodbuy.set_font_size(50);
+    GameOver win{};
+    //Graph_lib::Text goodbuy{Point{190, 200}, "Game over"};
+    //goodbuy.set_font_size(50);
     for (int i = 0; i < cells.size(); ++i)
         cells[i].deactivate();
-    win.attach(goodbuy); 
+    
+    //win.attach(goodbuy); 
     win.wait_for_button();
 }

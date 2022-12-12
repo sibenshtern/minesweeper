@@ -20,13 +20,42 @@ public:
     void Mark(Cell &cell);
     int Where(Cell &cell);
 
-    void GameOver();
-
+    void End();
     void attach(Graph_lib::Window &window) override;
 private:
     Graph_lib::Vector_ref<Cell> cells;
 };
 
 std::vector<std::vector<char>> *GenerateBoard(int, int);
+
+class GameOver : public Graph_lib::Window {
+public:
+    GameOver()
+        : Window{Point{200, 200}, 200, 200, "End"},
+        but{Point{90, 100}, 70, 20, "End", cb_next }
+        {
+            attach(but);
+        }
+
+    Graph_lib::Button but;
+    void wait_for_button ()
+    {
+        while (!button_pushed && Fl::wait());
+        button_pushed = false;
+        Fl::program_should_quit(1);
+        Fl::wait();
+    }
+
+private:
+  bool button_pushed{ false };
+
+  static void cb_next (Graph_lib::Address, Graph_lib::Address addr) // callback for next_button
+  {
+    auto* pb = static_cast<Graph_lib::Button*>(addr);
+    static_cast<GameOver&>(pb->window()).next();
+  }
+
+  void next () { button_pushed = true; }
+};
 
 #endif //MINESWEEPER_BOARD_H
