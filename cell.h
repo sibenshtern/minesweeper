@@ -2,6 +2,12 @@
 #define MINESWEEPER_CELL_H
 
 
+#include <stdexcept>
+#include <iostream>
+#include <vector>
+#include <random>
+#include <unordered_set>
+
 #include "Graph_lib/Simple_window.h"
 
 using namespace Graph_lib;

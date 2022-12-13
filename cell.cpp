@@ -1,8 +1,3 @@
-#include <stdexcept>
-#include <iostream>
-#include <vector>
-#include <random>
-#include <unordered_set>
 #include "cell.h"
 
 using u32 = uint_least16_t;
@@ -14,9 +9,8 @@ int kColors[9] = {17, 119, 127, 135, 134, 133, 132, 131, 130};
 
 Cell::Cell(Point xy, Tile &tile, Callback callback)
         : Button{xy, size, size, "", callback}, kTile{&tile} {
-            try {
+    try {
         tile.Attach(*this);
-//        label = std::to_string(dynamic_cast<EmptyTile &>(tile).MinesCount());
     }
     catch (std::exception &e) {
         std::cerr << e.what() << "\n";
@@ -46,16 +40,17 @@ void Cell::Open(int color) {
 }
 
 
-void Cell::AttachImage(Image& image){
+void Cell::AttachImage(Image &image) {
     own->attach(image);
 }
 
-void Cell::DetatchImage(Image& image){
+void Cell::DetatchImage(Image &image) {
     own->detach(image);
 }
+
 void MinedTile::Open() {
     auto center = kCell->Center();
-    auto *mine = new Image{Point{center.x - 48, center.y - 48}, "bomb-icon.png", Suffix::png};
+    auto *mine = new Image{Point{center.x - 48, center.y - 48}, "mine.png", Suffix::png};
     kCell->AttachImage(*mine);
 
 }
