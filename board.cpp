@@ -1,28 +1,19 @@
-#include <iostream>
-#include <vector>
-#include <random>
-#include <unordered_set>
-
-#include "Graph_lib/Graph.h"
-#include "Graph_lib/GUI.h"
-
-#include "cell.h"
 #include "board.h"
 
 Board::Board(Graph_lib::Point xy, Graph_lib::Callback callback)
         : Graph_lib::Widget{xy, size, size, "Minesweeper", nullptr} {
-    std::vector<Tile> tiles;
+    auto board = GenerateBoard(kMinesNum, N);
 
-    auto board = GenerateBoard(MinesNum, 10);
-
-    for (int i = 0; i < N; ++i)
-        for (int j = 0; j < N; ++j) {
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++) {
             Tile *tile;
+
             if ((*board)[i][j] == 'm')
                 tile = new MinedTile();
             else
                 tile = new EmptyTile{(*board)[i][j] - '0'};
-            cells.push_back(new Cell{Point{margin + j * Cell::size, margin + (N - 1 - i) * Cell::size}, *tile, callback});
+            cells.push_back(
+                    new Cell{Point{margin + j * Cell::size, margin + (N - 1 - i) * Cell::size}, *tile, callback});
         }
     delete board;
 }
@@ -75,7 +66,7 @@ std::vector<std::vector<char>> *GenerateBoard(int mines_num, int board_size) {
 
 int Board::Where(Cell &cell) {
     int k = 0;
-   for (; k < cells.size(); ++k) {
+    for (; k < cells.size(); ++k) {
         if (&cells[k] == &cell) {
             break;
         }
@@ -88,20 +79,19 @@ int Board::Where(Cell &cell) {
 }
 
 void Board::OpenCell(Cell &cell) {
-    if (!cell.kTile) 
+    if (!cell.kTile)
         throw std::runtime_error("Cell doesn't exist");
-    if (cell.kTile -> IsMarked())
-         cell.DetatchImage(*cell.img);
+    if (cell.kTile->IsMarked())
+        cell.DetatchImage(*cell.img);
 
 
-    if (cell.kTile->IsOpened()) 
+    if (cell.kTile->IsOpened())
         return;
 
     cell.kTile->Open();
-    OpenedCells += 1;
+    opened_cells += 1;
 
-    if (OpenedCells + MinesNum == N * N)
-    {
+    if (opened_cells + kMinesNum == N * N) {
         End("win");
     }
 
@@ -110,47 +100,43 @@ void Board::OpenCell(Cell &cell) {
         return;
     }
     int n = Where(cell);
-        std::cout << "position " << n << "\n";
-        cell.Open(17);
+    std::cout << "position " << n << "\n";
+    cell.Open(17);
 
     int x = n % N;
     int y = n / N;
-    for (int i = -1; i < 2; i++) 
+    for (int i = -1; i < 2; i++)
         for (int j = -1; j < 2; j++)
-            if (!(x + i > -1 && x + i < N)) 
+            if (!(x + i > -1 && x + i < N))
                 continue;
-            else if (!(y + j > -1 && y + j < N)) 
+            else if (!(y + j > -1 && y + j < N))
                 continue;
             else if (i == 0 && j == 0)
                 continue;
             else if (dynamic_cast<EmptyTile &>(*cell.kTile).IsMinesAround())
                 continue;
-            else if (!(i != 0 && j != 0 && !dynamic_cast<EmptyTile &>(*cells[(x + i) + N * (y + j)].kTile).IsMinesAround()))
+            else if (!(i != 0 && j != 0 &&
+                       !dynamic_cast<EmptyTile &>(*cells[(x + i) + N * (y + j)].kTile).IsMinesAround()))
                 OpenCell(cells[(x + i) + N * (y + j)]);
 }
 
 void Board::Mark(Cell &cell) {
-    if (!cell.kTile) 
+    if (!cell.kTile)
         throw std::runtime_error("cell doesn't on board");
     cell.kTile->ChangeState();
     auto center = cell.Center();
     if (!cell.kTile->IsMarked())
         cell.DetatchImage(*cell.img);
-    else
-    {
+    else {
         cell.img = new Image{Point{center.x - 48, center.y - 48}, "flag.png", Suffix::png};
         cell.AttachImage(*cell.img);
     }
 }
 
-void Board::End(std::string s)
-{
+void Board::End(std::string s) {
     GameOver win{s};
-    //Graph_lib::Text goodbuy{Point{190, 200}, "Game over"};
-    //goodbuy.set_font_size(50);
     for (int i = 0; i < cells.size(); ++i)
         cells[i].deactivate();
-    
-    //win.attach(goodbuy); 
+
     win.wait_for_button();
 }
