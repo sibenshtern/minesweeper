@@ -11,6 +11,7 @@ find_package(FLTK REQUIRED)
 find_package(OpenGL REQUIRED)
 
 set(GRAPHLIB_DIR ".")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
 include_directories(
         ${GRAPHLIB_DIR}
