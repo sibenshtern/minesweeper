@@ -91,17 +91,19 @@ void Board::OpenCell(Cell &cell) {
     cell.kTile->Open();
     opened_cells += 1;
 
-    if (opened_cells + kMinesNum == N * N) {
-        End("win");
-    }
-
     if (cell.kTile->IsMined()) {
-        End("failed");
+        End("You failed");
         return;
     }
+
     int n = Where(cell);
     std::cout << "position " << n << "\n";
     cell.Open(17);
+
+    if (opened_cells + kMinesNum == N * N) {
+        End("You win");
+    }
+
 
     int x = n % N;
     int y = n / N;

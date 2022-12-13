@@ -43,8 +43,10 @@ std::vector<std::vector<char>> *GenerateBoard(int, int);
 class GameOver : public Graph_lib::Window {
 public:
     GameOver(std::string s) :
-            Window{Point{200, 200}, 200, 200, "You " + s}, button{Point{90, 100}, 70, 20, "You " + s, cb_next} {
+            Window{Point{200, 200}, 200, 200, "Exit"}, button{Point{90, 100}, 70, 20, "Exit", cb_next} {
+        message.set_label(s);
         attach(button);
+        attach(message);
     }
 
     Graph_lib::Button button;
@@ -55,6 +57,7 @@ public:
     }
 
 private:
+    Graph_lib::Text message{Point {90, 70}, ""};
     bool button_pushed{false};
 
     static void cb_next(Graph_lib::Address, Graph_lib::Address addr) // callback for next_button
