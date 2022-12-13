@@ -33,7 +33,7 @@ void Tile::Attach(Cell &cell) {
     kCell = &cell;
 }
 
-void Cell::Open(int color) {
+void Cell::Open() {
     pw->color(Fl_Color(kColors[dynamic_cast<EmptyTile &>(*kTile).MinesCount()]));
     label = std::to_string(dynamic_cast<EmptyTile &>(*kTile).MinesCount());
     Fl::redraw();
@@ -52,7 +52,6 @@ void MinedTile::Open() {
     auto center = kCell->Center();
     auto *mine = new Image{Point{center.x - 48, center.y - 48}, "mine.png", Suffix::png};
     kCell->AttachImage(*mine);
-
 }
 
 EmptyTile::EmptyTile(int mines_around) : mines_around_count{mines_around} {};

@@ -2,7 +2,7 @@
 
 Board::Board(Graph_lib::Point xy, Graph_lib::Callback callback)
         : Graph_lib::Widget{xy, size, size, "Minesweeper", nullptr} {
-    auto board = GenerateBoard(kMinesNum, N);
+    auto board = GenerateBoard(kMinesNum, N, *this);
 
     for (int i = 0; i < N; i++)
         for (int j = 0; j < N; j++) {
@@ -40,12 +40,16 @@ void Board::attach(Graph_lib::Window &window) {
     own = &window;
 }
 
-std::vector<std::vector<char>> *GenerateBoard(int mines_num, int board_size) {
+std::vector<std::vector<char>> *GenerateBoard(int mines_num, int board_size, Board &board) {
     auto *head = new std::vector<std::vector<char>>(board_size, std::vector<char>(board_size, '0'));
-    if (mines_num >= board_size * board_size) throw std::runtime_error("too much mines");
+
+    if (mines_num >= board_size * board_size)
+        throw std::runtime_error("too much mines");
+
     std::vector<std::pair<int, int>> mines_coords;
 
     auto mines = GenerateMinesCoords(mines_num, board_size);
+    board.mines_coords = mines;
 
     for (auto el: mines)
         (*head)[el.first][el.second] = 'm';
@@ -92,18 +96,24 @@ void Board::OpenCell(Cell &cell) {
     opened_cells += 1;
 
     if (cell.kTile->IsMined()) {
+        for (auto [y, x] : mines_coords)
+            try {
+                cells[x + N * y].DetatchImage(*cells[x + N * y].img);
+                dynamic_cast<MinedTile &>(*cells[x + N * y].kTile).Open();
+            } catch (std::exception &e) {
+                std::cerr << e.what() << "\n";
+            }
+        Fl::redraw();
         End("You failed");
         return;
     }
 
     int n = Where(cell);
-    std::cout << "position " << n << "\n";
-    cell.Open(17);
+    cell.Open();
 
     if (opened_cells + kMinesNum == N * N) {
-        End("You win");
+        End("You winner");
     }
-
 
     int x = n % N;
     int y = n / N;
@@ -125,14 +135,14 @@ void Board::OpenCell(Cell &cell) {
 void Board::Mark(Cell &cell) {
     if (!cell.kTile)
         throw std::runtime_error("cell doesn't on board");
-    cell.kTile->ChangeState();
     auto center = cell.Center();
-    if (!cell.kTile->IsMarked())
+    if (cell.kTile->IsMarked())
         cell.DetatchImage(*cell.img);
     else {
         cell.img = new Image{Point{center.x - 48, center.y - 48}, "flag.png", Suffix::png};
         cell.AttachImage(*cell.img);
     }
+    cell.kTile->ChangeState();
 }
 
 void Board::End(std::string s) {
