@@ -1,7 +1,6 @@
 #ifndef MINESWEEPER_MINESWEEPER_H
 #define MINESWEEPER_MINESWEEPER_H
 
-#include "Graph_lib/Simple_window.h"
 #include "board.h"
 
 using Graph_lib::Point;
