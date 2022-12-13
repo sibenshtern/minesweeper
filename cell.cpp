@@ -59,8 +59,6 @@ EmptyTile::EmptyTile(int mines_around) : mines_around_count{mines_around} {};
 
 void EmptyTile::Open() {
     is_opened = true;
-    // TODO: place mines_around_count on button and make it disabled
-    //    std::cout << mines_around_count << "\n";
 }
 
 std::vector<std::pair<int, int>> GenerateMinesCoords(int mines_num, int board_size) {

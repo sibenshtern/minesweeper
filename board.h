@@ -11,7 +11,7 @@ class Board : public Graph_lib::Widget {
 public:
     static constexpr int margin = 30;
     static constexpr int N = 10; // size of board, board will have size N * N
-    static constexpr int size = Cell::size * N + 2 * margin; // TODO: calculate size of board (find formula)
+    static constexpr int size = Cell::size * N + 2 * margin; // window size in pixels
     static constexpr int kMinesNum = 10;
 
     Board(Point xy, Graph_lib::Callback callback);
@@ -52,8 +52,6 @@ public:
     void wait_for_button() {
         while (!button_pushed && Fl::wait());
         button_pushed = false;
-        //Fl::program_should_quit(1);
-        //Fl::wait();
     }
 
 private:
@@ -63,6 +61,7 @@ private:
     {
         auto *pb = static_cast<Graph_lib::Button *>(addr);
         dynamic_cast<GameOver &>(pb->window()).next();
+        exit(0);
     }
 
     void next() { button_pushed = true; }
