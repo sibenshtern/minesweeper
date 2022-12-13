@@ -13,11 +13,7 @@ Board::Board(Graph_lib::Point xy, Graph_lib::Callback callback)
         : Graph_lib::Widget{xy, size, size, "Minesweeper", nullptr} {
     std::vector<Tile> tiles;
 
-<<<<<<< HEAD
-    auto board = GenerateBoard(10, N);
-=======
-    auto board = GenerateBoard(5, N);
->>>>>>> 8f406c9... class GameOver
+    auto board = GenerateBoard(MinesNum, 10);
 
     for (int i = 0; i < N; ++i)
         for (int j = 0; j < N; ++j) {
@@ -98,13 +94,16 @@ void Board::OpenCell(Cell &cell) {
         return;
 
     cell.kTile->Open();
-<<<<<<< HEAD
-    if (cell.kTile->kIsMined()) {
-        GameOver();
-=======
+
+    OpenedCells += 1;
+
+    if (OpenedCells + MinesNum == N * N)
+    {
+        End("win");
+    }
+
     if (cell.kTile->IsMined()) {
-        End();
->>>>>>> 8f406c9... class GameOver
+        End("failed");
         return;
     }
     int n = Where(cell);
@@ -121,9 +120,9 @@ void Board::OpenCell(Cell &cell) {
                 continue;
             else if (i == 0 && j == 0)
                 continue;
-            else if (dynamic_cast<EmptyTile &>(*cell.kTile).kIsMinesAround()) 
+            else if (dynamic_cast<EmptyTile &>(*cell.kTile).IsMinesAround()) 
                 continue;
-            else if (!(i != 0 && j != 0 && !dynamic_cast<EmptyTile &>(*cells[(x + i) + N * (y + j)].kTile).kIsMinesAround()))
+            else if (!(i != 0 && j != 0 && !dynamic_cast<EmptyTile &>(*cells[(x + i) + N * (y + j)].kTile).IsMinesAround()))
                 OpenCell(cells[(x + i) + N * (y + j)]);
 }
 
@@ -132,11 +131,6 @@ void Board::Mark(Cell &cell) {
     if (!cell.kTile) 
         throw std::runtime_error("cell doesn't on board");
     cell.kTile->ChangeState();
-<<<<<<< HEAD
-}
-
-void Board::GameOver()
-=======
     auto center = cell.Center();
     if (!cell.kTile->IsMarked())
         cell.DetatchImage(*cell.img);
@@ -147,10 +141,9 @@ void Board::GameOver()
     }
 }
 
-void Board::End()
->>>>>>> 8f406c9... class GameOver
+void Board::End(std::string s)
 {
-    GameOver win{};
+    GameOver win{s};
     //Graph_lib::Text goodbuy{Point{190, 200}, "Game over"};
     //goodbuy.set_font_size(50);
     for (int i = 0; i < cells.size(); ++i)

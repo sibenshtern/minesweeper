@@ -3,12 +3,14 @@
 
 #include "Graph_lib/Simple_window.h"
 #include "cell.h"
+#include <string>
 
 class Board : public Graph_lib::Widget {
 public:
     static constexpr int margin = 30;
     static constexpr int size = 1060; // TODO: calculate size of board (find formula)
     static constexpr int N = 10;
+    static constexpr int MinesNum = 10;
 
     Board (Point xy, Graph_lib::Callback callback);
 
@@ -20,19 +22,20 @@ public:
     void Mark(Cell &cell);
     int Where(Cell &cell);
 
-    void End();
+    void End(std::string s);
     void attach(Graph_lib::Window &window) override;
 private:
     Graph_lib::Vector_ref<Cell> cells;
+    int OpenedCells = 0;
 };
 
 std::vector<std::vector<char>> *GenerateBoard(int, int);
 
 class GameOver : public Graph_lib::Window {
 public:
-    GameOver()
-        : Window{Point{200, 200}, 200, 200, "End"},
-        but{Point{90, 100}, 70, 20, "End", cb_next }
+    GameOver(std::string s)
+        : Window{Point{200, 200}, 200, 200, "You " + s},
+        but{Point{90, 100}, 70, 20, "You " + s, cb_next }
         {
             attach(but);
         }
@@ -42,8 +45,8 @@ public:
     {
         while (!button_pushed && Fl::wait());
         button_pushed = false;
-        Fl::program_should_quit(1);
-        Fl::wait();
+        //Fl::program_should_quit(1);
+        //Fl::wait();
     }
 
 private:

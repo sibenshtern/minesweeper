@@ -13,16 +13,17 @@ using namespace Graph_lib;
 int kColors[9] = {17, 119, 127, 135, 134, 133, 132, 131, 130};
 
 Cell::Cell(Point xy, Tile &tile, Callback callback)
-        : Button{xy, size, size, "", callback}, kSize{size}, kTile{&tile} {
+        : Button{xy, size, size, "", callback}, kTile{&tile} {
             try {
-        label = std::to_string(dynamic_cast<EmptyTile &>(tile).mines_around_count);
+        tile.Attach(*this);
+//        label = std::to_string(dynamic_cast<EmptyTile &>(tile).MinesCount());
     }
     catch (std::exception &e) {
         std::cerr << e.what() << "\n";
     }
 }
 
-void Cell::attach(Window &window) {
+void Cell::attach(Graph_lib::Window &window) {
     Button::attach(window);
 }
 
@@ -32,23 +33,34 @@ void Cell::AttachTile(Tile &tile) {
     kTile = &tile;
 }
 
-void Tile::Attach(const Cell &cell) {
+void Tile::Attach(Cell &cell) {
     if (kCell)
         throw std::runtime_error("Tile::Attach(): Tile already add to Cell");
     kCell = &cell;
 }
 
 void Cell::Open(int color) {
-    pw->color(Fl_Color(kColors[dynamic_cast<EmptyTile &>(*kTile).mines_around_count]));
+    pw->color(Fl_Color(kColors[dynamic_cast<EmptyTile &>(*kTile).MinesCount()]));
+    label = std::to_string(dynamic_cast<EmptyTile &>(*kTile).MinesCount());
     Fl::redraw();
 }
 
-void MinedTile::Open() {
-    // TODO: draw mine picture (prefer SVG) and end the game (need to be checked in Minesweepers)
+
+void Cell::AttachImage(Image& image){
+    own->attach(image);
 }
 
-EmptyTile::EmptyTile(int mines_around)
-        : mines_around_count{mines_around} {};
+void Cell::DetatchImage(Image& image){
+    own->detach(image);
+}
+void MinedTile::Open() {
+    auto center = kCell->Center();
+    auto *mine = new Image{Point{center.x - 48, center.y - 48}, "bomb-icon.png", Suffix::png};
+    kCell->AttachImage(*mine);
+
+}
+
+EmptyTile::EmptyTile(int mines_around) : mines_around_count{mines_around} {};
 
 void EmptyTile::Open() {
     is_opened = true;
@@ -71,7 +83,7 @@ std::vector<std::pair<int, int>> GenerateMinesCoords(int mines_num, int board_si
     std::vector<std::pair<int, int>> coords_xy;
 
     for (int xy: coords)
-        coords_xy.push_back(std::pair(xy / board_size, xy % board_size));
+        coords_xy.emplace_back(std::pair(xy / board_size, xy % board_size));
 
     return coords_xy;
 }
