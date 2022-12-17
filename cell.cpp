@@ -50,8 +50,8 @@ void Cell::DetatchImage(Image &image) {
 
 void MinedTile::Open() {
     auto center = kCell->Center();
-    auto *mine = new Image{Point{center.x - 48, center.y - 48}, "mine.png", Suffix::png};
-    kCell->AttachImage(*mine);
+    kCell->mine = new Image{Point{center.x - 48, center.y - 48}, "mine.png", Suffix::png};
+    kCell->AttachImage(*kCell->mine);
 }
 
 EmptyTile::EmptyTile(int mines_around) : mines_around_count{mines_around} {};

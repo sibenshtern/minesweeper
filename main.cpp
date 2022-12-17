@@ -1,6 +1,5 @@
 #include <iostream>
 
-#include <Graph_lib/Graph.h>
 #include <Graph_lib/Simple_window.h>
 
 #include "minesweeper.h"

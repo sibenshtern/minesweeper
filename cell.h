@@ -24,6 +24,9 @@ public:
     void AttachImage(Image&);
     void DetatchImage(Image&);
     Image *img = nullptr;
+    Image *mine = nullptr;
+
+    ~Cell() { delete img; delete mine; }
 
     Point Center() const { return Point{loc.x + width / 2, loc.y + height / 2}; }
     Tile *kTile{nullptr}; // pointer to logic tile

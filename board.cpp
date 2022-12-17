@@ -6,14 +6,11 @@ Board::Board(Graph_lib::Point xy, Graph_lib::Callback callback)
 
     for (int i = 0; i < N; i++)
         for (int j = 0; j < N; j++) {
-            Tile *tile;
-
             if ((*board)[i][j] == 'm')
-                tile = new MinedTile();
+                tiles.push_back(new MinedTile());
             else
-                tile = new EmptyTile{(*board)[i][j] - '0'};
-            cells.push_back(
-                    new Cell{Point{margin + j * Cell::size, margin + (N - 1 - i) * Cell::size}, *tile, callback});
+                tiles.push_back(new EmptyTile{(*board)[i][j] - '0'});
+            cells.push_back(new Cell{Point{margin + j * Cell::size, margin + (N - 1 - i) * Cell::size}, tiles[tiles.size() - 1], callback});
         }
     delete board;
 }
