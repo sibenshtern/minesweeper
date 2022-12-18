@@ -18,19 +18,32 @@ class Cell : public Graph_lib::Button {
 public:
     static constexpr int size = 100; // cell size in pixel
     Cell(Point xy, Tile &t, Callback callback);
-    void attach(Graph_lib::Window &window) override;
-    void AttachTile(Tile &tile);
-    void Open();
-    void AttachImage(Image&);
-    void DetatchImage(Image&);
-    Image *img = nullptr;
-    Image *mine = nullptr;
 
-    ~Cell() { delete img; delete mine; }
+    void attach(Graph_lib::Window &window) override;
+
+    void deactivate() { pw->deactivate(); }
+
+    void AttachTile(Tile &tile);
+
+    void Open();
+    void AttachImage(Image &);
+    void DetatchImage(Image &);
 
     Point Center() const { return Point{loc.x + width / 2, loc.y + height / 2}; }
+
+    ~Cell() {
+        delete img;
+        delete mine;
+    }
+
+    void set_image(Image *_img) { img = _img; }
+
+    Image &get_image() { return *img; }
+    Tile &get_tile() { return *kTile; }
+private:
+    Image *img{nullptr};
+    Image *mine{nullptr};
     Tile *kTile{nullptr}; // pointer to logic tile
-    void deactivate() { pw->deactivate(); }
 };
 
 class Tile {
@@ -38,10 +51,13 @@ public:
     Tile() = default;
 
     void Attach(Cell &cell);
+
     void ChangeState() { is_marked = !is_marked; }
-    
+
     bool IsOpened() { return is_opened; }
+
     bool IsMarked() { return is_marked; }
+
     // Shows if cell is mined
     // Return true if yes, false if no
     virtual bool IsMined() const = 0;
@@ -61,6 +77,7 @@ class MinedTile : public Tile {
 public:
     MinedTile() = default;
     void Open() override;
+
     bool IsMined() const override { return true; }
 };
 
@@ -69,6 +86,7 @@ public:
     EmptyTile(int mines_around);
 
     void Open() override;
+
     bool IsMined() const override { return false; }
 
     // Shows if there are mines around the cell.
@@ -77,7 +95,8 @@ public:
 
     // Return count of mines around the cell.
     // Interface for mines_around_count
-    int MinesCount() const {return mines_around_count; }
+    int MinesCount() const { return mines_around_count; }
+
 private:
     int mines_around_count;
 };

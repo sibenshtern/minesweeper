@@ -50,8 +50,8 @@ void Cell::DetatchImage(Image &image) {
 
 void MinedTile::Open() {
     auto center = kCell->Center();
-    kCell->mine = new Image{Point{center.x - 48, center.y - 48}, "mine.png", Suffix::png};
-    kCell->AttachImage(*kCell->mine);
+    kCell->set_image(new Image{Point{center.x - 48, center.y - 48}, "mine.png", Suffix::png});
+    kCell->AttachImage(kCell->get_image());
 }
 
 EmptyTile::EmptyTile(int mines_around) : mines_around_count{mines_around} {};
@@ -75,7 +75,7 @@ std::vector<std::pair<int, int>> GenerateMinesCoords(int mines_num, int board_si
     std::vector<std::pair<int, int>> coords_xy;
 
     for (int xy: coords)
-        coords_xy.emplace_back(std::pair(xy / board_size, xy % board_size));
+        coords_xy.push_back({xy / board_size, xy % board_size});
 
     return coords_xy;
 }
