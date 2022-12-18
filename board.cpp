@@ -6,14 +6,11 @@ Board::Board(Graph_lib::Point xy, Graph_lib::Callback callback)
 
     for (int i = 0; i < N; i++)
         for (int j = 0; j < N; j++) {
-            Tile *tile;
-
             if ((*board)[i][j] == 'm')
-                tile = new MinedTile();
+                tiles.push_back(new MinedTile());
             else
-                tile = new EmptyTile{(*board)[i][j] - '0'};
-            cells.push_back(
-                    new Cell{Point{margin + j * Cell::size, margin + (N - 1 - i) * Cell::size}, *tile, callback});
+                tiles.push_back(new EmptyTile{(*board)[i][j] - '0'});
+            cells.push_back(new Cell{Point{margin + j * Cell::size, margin + (N - 1 - i) * Cell::size}, tiles[tiles.size() - 1], callback});
         }
     delete board;
 }
@@ -83,23 +80,21 @@ int Board::Where(Cell &cell) {
 }
 
 void Board::OpenCell(Cell &cell) {
-    if (!cell.kTile)
-        throw std::runtime_error("Cell doesn't exist");
-    if (cell.kTile->IsMarked())
-        cell.DetatchImage(*cell.img);
+    if (cell.get_tile().IsMarked())
+        cell.DetatchImage(cell.get_image());
 
 
-    if (cell.kTile->IsOpened())
+    if (cell.get_tile().IsOpened())
         return;
 
-    cell.kTile->Open();
+    cell.get_tile().Open();
     opened_cells += 1;
 
-    if (cell.kTile->IsMined()) {
+    if (cell.get_tile().IsMined()) {
         for (auto [y, x] : mines_coords)
             try {
-                cells[x + N * y].DetatchImage(*cells[x + N * y].img);
-                dynamic_cast<MinedTile &>(*cells[x + N * y].kTile).Open();
+                cells[x + N * y].DetatchImage(cells[x + N * y].get_image());
+                dynamic_cast<MinedTile &>(cells[x + N * y].get_tile()).Open();
             } catch (std::exception &e) {
                 std::cerr << e.what() << "\n";
             }
@@ -125,24 +120,22 @@ void Board::OpenCell(Cell &cell) {
                 continue;
             else if (i == 0 && j == 0)
                 continue;
-            else if (dynamic_cast<EmptyTile &>(*cell.kTile).IsMinesAround())
+            else if (dynamic_cast<EmptyTile &>(cell.get_tile()).IsMinesAround())
                 continue;
             else if (!(i != 0 && j != 0 &&
-                       !dynamic_cast<EmptyTile &>(*cells[(x + i) + N * (y + j)].kTile).IsMinesAround()))
+                       !dynamic_cast<EmptyTile &>(cells[(x + i) + N * (y + j)].get_tile()).IsMinesAround()))
                 OpenCell(cells[(x + i) + N * (y + j)]);
 }
 
 void Board::Mark(Cell &cell) {
-    if (!cell.kTile)
-        throw std::runtime_error("cell doesn't on board");
     auto center = cell.Center();
-    if (cell.kTile->IsMarked())
-        cell.DetatchImage(*cell.img);
+    if (cell.get_tile().IsMarked())
+        cell.DetatchImage(cell.get_image());
     else {
-        cell.img = new Image{Point{center.x - 48, center.y - 48}, "flag.png", Suffix::png};
-        cell.AttachImage(*cell.img);
+        cell.set_image(new Image{Point{center.x - 48, center.y - 48}, "flag.png", Suffix::png});
+        cell.AttachImage(cell.get_image());
     }
-    cell.kTile->ChangeState();
+    cell.get_tile().ChangeState();
 }
 
 void Board::End(std::string s) {

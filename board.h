@@ -35,6 +35,8 @@ public:
     std::vector<std::pair<int, int>> mines_coords;
 private:
     Graph_lib::Vector_ref<Cell> cells;
+    Graph_lib::Vector_ref<Graph_lib::Image> images;
+    Graph_lib::Vector_ref<Tile> tiles;
     int opened_cells = 0;
 };
 
@@ -59,7 +61,7 @@ public:
     }
 
 private:
-    Graph_lib::Text message{Point {100, 100}, ""};
+    Graph_lib::Text message{Point{100, 100}, ""};
     bool button_pushed{false};
 
     static void cb_next(Graph_lib::Address, Graph_lib::Address addr) // callback for next_button
